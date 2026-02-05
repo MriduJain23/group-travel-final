@@ -27,13 +27,16 @@ const Navbar = () => {
   return (
     <nav
       style={{
-        position: "sticky",
+        position: "fixed",
         top: 0,
-        zIndex: 9999,
-        background: "rgba(2, 6, 23, 0.75)",
-        backdropFilter: "blur(12px)",
+        left: 0,
+        right: 0,
+        zIndex: 999,
+        background: "rgba(10, 14, 39, 0.85)",
+        backdropFilter: "blur(20px)",
         borderBottom: "1px solid rgba(255,255,255,0.1)",
-        padding: "12px 24px",
+        padding: "16px 40px",
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)"
       }}
     >
       <div
@@ -41,7 +44,7 @@ const Navbar = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          maxWidth: "1200px",
+          maxWidth: "1400px",
           margin: "0 auto",
         }}
       >
@@ -49,18 +52,24 @@ const Navbar = () => {
         <h2
           onClick={() => navigate(isAdmin ? "/admin-dashboard" : "/")}
           style={{
-            fontWeight: 700,
-            cursor: "pointer",
-            background: "linear-gradient(90deg, #38bdf8, #2563eb)",
+            background: "linear-gradient(135deg, #38bdf8, #8b5cf6, #ec4899)",
             WebkitBackgroundClip: "text",
-            color: "transparent",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            cursor: "pointer",
+            fontSize: "24px",
+            fontWeight: "800",
+            transition: "transform 0.3s ease",
+            userSelect: "none"
           }}
+          onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+          onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
         >
-          GroupTravel
+          ✈️ GroupTravel
         </h2>
 
         {/* Navigation */}
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
           {isAdmin ? (
             // Admin Navigation
             <>
@@ -76,6 +85,34 @@ const Navbar = () => {
               <NavBtn label="Search Hotels" onClick={() => navigate("/results")} />
               <NavBtn label="Secure Access" onClick={() => navigate("/secure")} />
               <NavBtn label="AI Insights" onClick={() => navigate("/ai-insights")} />
+              <button
+                onClick={() => navigate("/gamification")}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: "8px",
+                  background: "linear-gradient(135deg, #fbbf24, #f59e0b)",
+                  color: "white",
+                  fontWeight: 700,
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 4px 15px rgba(245, 158, 11, 0.4)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px"
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(245, 158, 11, 0.6)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 4px 15px rgba(245, 158, 11, 0.4)";
+                }}
+              >
+                <span>🏆</span> Leaderboards
+              </button>
               <button
                 className="btn-primary"
                 onClick={() => navigate("/results")}

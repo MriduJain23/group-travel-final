@@ -265,27 +265,68 @@ app.get("/api/guests/report/summary", (req, res) => {
   }
 });
 
-// 🔥 MAIN API: frontend will call this
+// 🔥 HOTEL SEARCH API
 app.post("/api/hotels", async (req, res) => {
   try {
-    const response = await axios.post(
+    const { CityId, CheckInDate, CheckOutDate, Rooms } = req.body;
+
+    // Validate required fields
+    if (!CityId || !CheckInDate || !CheckOutDate || !Rooms) {
+      return res.status(400).json({
+        error: "Missing required fields: CityId, CheckInDate, CheckOutDate, Rooms",
+        received: req.body
+      });
+    }
+
+    console.log(`[Hotel Search] Searching: City=${CityId}, CheckIn=${CheckInDate}, CheckOut=${CheckOutDate}, Rooms=${Rooms}`);
+
+    // Call TBO API with proper formatting
+    const tboResponse = await axios.post(
       process.env.TBO_API_URL,
-      req.body,
+      {
+        CityId: String(CityId),
+        CheckInDate: String(CheckInDate),
+        CheckOutDate: String(CheckOutDate),
+        Rooms: parseInt(Rooms),
+        SortBy: 1,
+        ShowResultCount: 50
+      },
       {
         auth: {
           username: process.env.TBO_USERNAME,
           password: process.env.TBO_PASSWORD
         },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        timeout: 30000
       }
     );
 
-    res.json(response.data);
+    console.log(`[Hotel Search Success] Found ${tboResponse.data?.HotelSearchResult?.HotelResults?.length || 0} hotels`);
+    res.json(tboResponse.data);
+
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: "TBO API failed" });
+    console.error("[Hotel Search Error]", {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data
+    });
+
+    // Return error with more details
+    if (error.response) {
+      return res.status(error.response.status || 500).json({
+        error: error.response.data?.Error || "TBO API Error",
+        message: error.response.data?.Message || error.message,
+        status: error.response.status
+      });
+    }
+
+    res.status(500).json({
+      error: "Hotel search failed",
+      message: error.message
+    });
   }
 });
 

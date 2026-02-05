@@ -14,6 +14,7 @@ import GroupDashboard from "./pages/GroupDashboard";
 import Reports from "./pages/Reports";
 import SecureLanding from "./pages/SecureLanding";
 import EventMicrosite from "./pages/Event/EventMicrosite";
+import GuestEventApp from "./pages/Event/GuestEventApp";
 import AIInsights from "./pages/AIInsights/AIInsights.jsx";
 import Guests from "./pages/Guests/Guests.jsx";
 import ResourceAllocation from "./pages/ResourceAllocation/ResourceAllocation.jsx";
@@ -108,6 +109,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Results />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/gamification"
+            element={
+              <ProtectedRoute>
+                <GuestEventApp />
               </ProtectedRoute>
             }
           />

@@ -235,3 +235,97 @@
     flex-direction: column;
   }
 }
+
+/* High-contrast overrides to ensure readability on dark backgrounds */
+.event-schedule,
+.schedule-day,
+.day-activities,
+.activity-item {
+  color: #f8fbff;
+}
+
+.day-title,
+.activity-details h4,
+.time-badge,
+.day-number {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+
+.activity-details h4 {
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: #ffffff !important;
+}
+
+/* Force remove any background-clip/transparent-fill that may make headings invisible */
+.day-title,
+.activity-details h4 {
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+}
+
+/* Ensure titles sit above any decorative overlays */
+.event-schedule .day-title,
+.event-schedule .activity-details h4 {
+  background: none !important;
+  background-image: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Push any pseudo-element overlays behind content */
+.schedule-day::before,
+.schedule-day::after,
+.activity-item::before,
+.activity-item::after,
+.day-header::before,
+.day-header::after {
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.65 !important;
+}
+
+.activity-details p,
+.day-date,
+.legend-item {
+  color: rgba(255,255,255,0.85) !important;
+}
+
+.schedule-day {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.activity-item {
+  background: rgba(255,255,255,0.03);
+}
+
+.time-badge {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(102,126,234,0.95), rgba(118,75,162,0.95));
+}
+
+/* Make sure tags are readable */
+.tag,
+.dietary-tag,
+.formal-tag {
+  color: #fff;
+}
+
+/* Subtle elevation to separate text from background */
+.schedule-container,
+.schedule-day {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
