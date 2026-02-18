@@ -7,6 +7,8 @@
 const API = import.meta.env.VITE_API_URL; // Render backend
 
 class EventCoordinationService {
+  /* ================= STATIC DEMO DATA ================= */
+
   static events = [
     {
       id: 1,
@@ -85,15 +87,15 @@ class EventCoordinationService {
   ];
 
   static itineraries = {
-    1: { guestId: 1, eventId: 1, personalItinerary: [
-      { day: 1, activity: "Arrival at 14:30", notes: "Room 501, Deluxe Double" },
-      { day: 2, activity: "Wedding Ceremony at 17:00", notes: "Formal attire required" },
-      { day: 3, activity: "Checkout at 12:00", notes: "Hotel checkout time" }
-    ]},
-    2: { guestId: 2, eventId: 1, personalItinerary: [
-      { day: 1, activity: "Arrival at 16:00", notes: "Room 502, Deluxe Double" },
-      { day: 2, activity: "Wedding Ceremony at 17:00", notes: "Formal attire. Dietary: Vegetarian" }
-    ]}
+    1: {
+      guestId: 1,
+      eventId: 1,
+      personalItinerary: [
+        { day: 1, activity: "Arrival at 14:30", notes: "Room 501, Deluxe Double" },
+        { day: 2, activity: "Wedding Ceremony at 17:00", notes: "Formal attire required" },
+        { day: 3, activity: "Checkout at 12:00", notes: "Hotel checkout time" }
+      ]
+    }
   };
 
   static guestPersonalization = {
@@ -102,90 +104,77 @@ class EventCoordinationService {
       eventId: 1,
       name: "Rajesh Kumar",
       email: "rajesh@example.com",
-      hotelAssignment: {
-        hotel: "Grand Himalayan Resort",
-        roomNumber: "501",
-        roomType: "Deluxe Double",
-        floor: 5,
-        checkIn: "2024-12-20 14:00",
-        checkOut: "2024-12-22 12:00"
-      },
-      diningPreferences: ["Vegetarian", "No Onion", "No Garlic"],
-      specialRequests: "Ground floor preferred",
-      transportationNeeds: "Airport pickup required",
-      accessibility: "Wheelchair accessible room",
-      emergencyContact: "+91-9876543210",
-      dietaryRestrictions: ["Vegetarian"]
-    },
-    2: {
-      guestId: 2,
-      eventId: 1,
-      name: "Priya Sharma",
-      email: "priya@example.com",
-      hotelAssignment: {
-        hotel: "Grand Himalayan Resort",
-        roomNumber: "502",
-        roomType: "Deluxe Double",
-        floor: 5,
-        checkIn: "2024-12-20 13:30",
-        checkOut: "2024-12-22 12:00"
-      },
-      diningPreferences: ["Vegan", "Gluten-Free"],
-      specialRequests: "High floor preferred - city view",
-      transportationNeeds: "Airport pickup required",
-      accessibility: null,
-      emergencyContact: "+91-9876543211",
-      dietaryRestrictions: ["Vegan", "Gluten-Free"]
+      diningPreferences: ["Vegetarian"],
+      emergencyContact: "+91-9876543210"
     }
   };
 
   static updates = [
-    { id: 1, eventId: 1, timestamp: new Date("2024-12-15T10:30:00"), type: "schedule", message: "Dinner time updated from 8:00 PM to 8:30 PM", severity: "info", read: false },
-    { id: 2, eventId: 1, timestamp: new Date("2024-12-14T14:20:00"), type: "accommodation", message: "Room upgrade available for guests in Block A", severity: "success", read: false },
-    { id: 3, eventId: 1, timestamp: new Date("2024-12-13T09:15:00"), type: "activity", message: "Pre-wedding photo session rescheduled to 9:00 AM", severity: "warning", read: false },
-    { id: 4, eventId: 1, timestamp: new Date("2024-12-12T16:45:00"), type: "transport", message: "Airport shuttle schedule confirmed", severity: "info", read: true }
+    { id: 1, eventId: 1, timestamp: new Date(), type: "schedule", message: "Dinner time updated", severity: "info", read: false }
   ];
 
-  static getEventById(eventId) { return this.events.find(e => e.id === eventId); }
-  static getEventSchedule(eventId) { return this.schedules.filter(s => s.eventId === eventId); }
-  static getGuestItinerary(guestId) { return this.itineraries[guestId] || null; }
-  static getGuestPersonalization(guestId) { return this.guestPersonalization[guestId] || null; }
-  static getEventUpdates(eventId) { return this.updates.filter(u => u.eventId === eventId).sort((a,b)=>b.timestamp-a.timestamp); }
+  /* ================= HELPERS ================= */
 
-  static updateSubscribers = [];
-  static subscribeToUpdates(cb){ this.updateSubscribers.push(cb); return ()=>this.updateSubscribers=this.updateSubscribers.filter(x=>x!==cb); }
-  static notifyUpdateSubscribers(u){ this.updateSubscribers.forEach(cb=>cb(u)); }
+  static getEventById(id) { return this.events.find(e => e.id === id); }
+  static getEventSchedule(id) { return this.schedules.filter(s => s.eventId === id); }
+  static getGuestItinerary(id) { return this.itineraries[id] || null; }
+  static getGuestPersonalization(id) { return this.guestPersonalization[id] || null; }
+  static getEventUpdates(id) { return this.updates.filter(u => u.eventId === id); }
+  static getEventGuests(eventId) { return Object.values(this.guestPersonalization).filter(g => g.eventId === eventId); }
 
-  static getEventGuests(eventId){ return Object.values(this.guestPersonalization).filter(g=>g.eventId===eventId); }
-
-  /* ===== BACKEND CRUD (SAFE) ===== */
+  /* ================= ADMIN SAFE CRUD ================= */
 
   static async getAllEvents(filter = {}) {
-    const q = new URLSearchParams(filter).toString();
-    const res = await fetch(`${API}/api/events?${q}`);
-    return res.json();
+    try {
+      const q = new URLSearchParams(filter).toString();
+      const res = await fetch(`${API}/api/events?${q}`);
+      if (!res.ok) throw new Error("Backend failed");
+      const data = await res.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        localStorage.setItem("admin_events", JSON.stringify(data));
+        return data;
+      }
+    } catch (e) {
+      console.warn("Using fallback:", e.message);
+    }
+
+    const local = localStorage.getItem("admin_events");
+    if (local) return JSON.parse(local);
+
+    return this.events;
   }
 
   static async createEvent(eventData) {
-    const res = await fetch(`${API}/api/events`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(eventData)
-    });
-    return res.json();
-  }
+    try {
+      const res = await fetch(`${API}/api/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(eventData)
+      });
+      const data = await res.json();
 
-  static async updateEvent(eventId, eventData) {
-    const res = await fetch(`${API}/api/events/${eventId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(eventData)
-    });
-    return res.json();
+      const local = JSON.parse(localStorage.getItem("admin_events") || "[]");
+      local.push(data);
+      localStorage.setItem("admin_events", JSON.stringify(local));
+      return data;
+    } catch {
+      const local = JSON.parse(localStorage.getItem("admin_events") || "[]");
+      const fake = { ...eventData, id: Date.now() };
+      local.push(fake);
+      localStorage.setItem("admin_events", JSON.stringify(local));
+      return fake;
+    }
   }
 
   static async deleteEvent(eventId) {
-    await fetch(`${API}/api/events/${eventId}`, { method: "DELETE" });
+    try {
+      await fetch(`${API}/api/events/${eventId}`, { method: "DELETE" });
+    } catch {}
+
+    const local = JSON.parse(localStorage.getItem("admin_events") || "[]");
+    const updated = local.filter(e => e.id !== eventId);
+    localStorage.setItem("admin_events", JSON.stringify(updated));
     return true;
   }
 }
