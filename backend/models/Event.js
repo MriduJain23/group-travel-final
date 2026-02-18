@@ -6,6 +6,10 @@ const eventSchema = new mongoose.Schema({
   venue: { type: String },
   description: { type: String },
   additionalFields: { type: Map, of: String }, // <-- dynamic fields (like extra columns)
+  createdBy: {
+      userId: String,
+      role: String // "admin" or "client"
+    },
 }, { timestamps: true });
 
 export const Event = mongoose.model("Event", eventSchema);
