@@ -547,6 +547,32 @@ const EventMicrosite = () => {
                 {event.description}
               </p>
             </div>
+            {/* Add these lines for Total Guests and Event Days */}
+    <div style={{ marginBottom: "32px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "16px" }}>
+      <div style={{
+        background: "rgba(255, 255, 255, 0.05)",
+        backdropFilter: "blur(10px)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: "12px",
+        padding: "20px",
+        textAlign: "center"
+      }}>
+        <h4 style={{ margin: "0 0 8px 0", fontSize: "2.5rem", color: "#667eea" }}>{event.totalGuests}</h4>
+        <p style={{ margin: "0", opacity: "0.7", fontSize: "0.9rem" }}>Total Guests</p>
+      </div>
+      <div style={{
+        background: "rgba(255, 255, 255, 0.05)",
+        backdropFilter: "blur(10px)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: "12px",
+        padding: "20px",
+        textAlign: "center"
+      }}>
+        <h4 style={{ margin: "0 0 8px 0", fontSize: "2.5rem", color: "#764ba2" }}>{event.eventDays}</h4>
+        <p style={{ margin: "0", opacity: "0.7", fontSize: "0.9rem" }}>Event Days</p>
+      </div>
+    </div>
+
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "16px" }}>
               <div style={{
