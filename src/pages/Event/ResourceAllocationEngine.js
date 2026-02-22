@@ -257,12 +257,20 @@ class ResourceAllocationEngine {
         }
       });
 
+      // Ensure that the 'transport.suggestions' is an array and not empty before proceeding
+    if (Array.isArray(suggestions) && suggestions.length > 0) {
       return suggestions;
-    } catch (error) {
-      console.error("Error suggesting transport options:", error);
+    } else {
+      // If no transport suggestions, log a message or handle it accordingly
+      console.warn('No transport options available.');
       return [];
     }
+
+  } catch (error) {
+    console.error("Error suggesting transport options:", error);
+    return [];
   }
+}
 
   /**
    * Get allocation recommendations summary
