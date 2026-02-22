@@ -547,8 +547,9 @@ const EventMicrosite = () => {
                 {event.description}
               </p>
             </div>
-            {/* Add these lines for Total Guests and Event Days */}
+              {/* Event Info Cards */}
     <div style={{ marginBottom: "32px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "16px" }}>
+      {/* Total Guests */}
       <div style={{
         background: "rgba(255, 255, 255, 0.05)",
         backdropFilter: "blur(10px)",
@@ -557,9 +558,13 @@ const EventMicrosite = () => {
         padding: "20px",
         textAlign: "center"
       }}>
-        <h4 style={{ margin: "0 0 8px 0", fontSize: "2.5rem", color: "#667eea" }}>{event.totalGuests}</h4>
+        <h4 style={{ margin: "0 0 8px 0", fontSize: "2.5rem", color: "#667eea" }}>
+          {event.totalGuests || 0} {/* Display total guests */}
+        </h4>
         <p style={{ margin: "0", opacity: "0.7", fontSize: "0.9rem" }}>Total Guests</p>
       </div>
+
+      {/* Event Days */}
       <div style={{
         background: "rgba(255, 255, 255, 0.05)",
         backdropFilter: "blur(10px)",
@@ -568,10 +573,30 @@ const EventMicrosite = () => {
         padding: "20px",
         textAlign: "center"
       }}>
-        <h4 style={{ margin: "0 0 8px 0", fontSize: "2.5rem", color: "#764ba2" }}>{event.eventDays}</h4>
+        <h4 style={{ margin: "0 0 8px 0", fontSize: "2.5rem", color: "#764ba2" }}>
+          {event.eventDays || 0} {/* Display event days */}
+        </h4>
         <p style={{ margin: "0", opacity: "0.7", fontSize: "0.9rem" }}>Event Days</p>
       </div>
+
+      {/* Activities - Show only for Demo events */}
+      {event.isDemo && (
+        <div style={{
+          background: "rgba(255, 255, 255, 0.05)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          borderRadius: "12px",
+          padding: "20px",
+          textAlign: "center"
+        }}>
+          <h4 style={{ margin: "0 0 8px 0", fontSize: "2.5rem", color: "#ffbb33" }}>
+            {event.activities ? event.activities.length : 0} {/* Display number of activities for demo events */}
+          </h4>
+          <p style={{ margin: "0", opacity: "0.7", fontSize: "0.9rem" }}>Activities</p>
+        </div>
+      )}
     </div>
+
 
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "16px" }}>
