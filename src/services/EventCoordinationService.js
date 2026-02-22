@@ -1137,7 +1137,7 @@ static getInventoryByEventId(eventId) {
       throw new Error("No auth token found");
     }
 
-    const res = await fetch(BASE_URL, {
+    const res = await fetch(`${BASE_URL}/api/events`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -1194,7 +1194,7 @@ static getInventoryByEventId(eventId) {
       throw new Error("No auth token found");
     }
 
-    const res = await fetch(BASE_URL, {
+    const res = await fetch(`${BASE_URL}/api/events`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1221,7 +1221,7 @@ static async updateEvent(id, eventData) {
     throw new Error("No auth token found");
   }
 
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/api/events/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -1253,7 +1253,7 @@ static async getEventById(id) {
     throw new Error("No auth token found");
   }
 
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/api/events/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
