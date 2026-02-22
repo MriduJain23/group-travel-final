@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 export default function auth(req, res, next) {
   const authHeader = req.headers.authorization;
+  console.log("Authorization Header:", authHeader);
 
   // 1️⃣ Check header
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -9,7 +10,7 @@ export default function auth(req, res, next) {
   }
 
   const token = authHeader.split(" ")[1];
-
+console.log("Authorization Header:", authHeader);
   /**
    * 2️⃣ DEV MODE BYPASS
    * Accept temporary frontend tokens like: token_12345
